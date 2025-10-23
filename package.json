@@ -1,0 +1,20 @@
+{
+  "name": "construcao-software-2025",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run -ws build",
+    "test": "npm run -ws test",
+    "lint": "npm run -ws lint",
+    "format": "npm run -ws format",
+    "dev:backend": "npm --workspace apps/backend run dev",
+    "dev:frontend": "npm --workspace apps/frontend run dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+
