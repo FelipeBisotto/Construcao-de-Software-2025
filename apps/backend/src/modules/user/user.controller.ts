@@ -1,6 +1,6 @@
-import type { Request, Response } from 'express';
-import { userService } from './user.service.js';
-import { userCreateSchema, userUpdateSchema } from './user.schema.js';
+import { Request, Response } from 'express';
+import { userService } from './user.service';
+import { userCreateSchema, userUpdateSchema } from './user.schema';
 
 export const userController = {
   list: async (_req: Request, res: Response) => {

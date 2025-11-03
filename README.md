@@ -16,7 +16,13 @@ Este repositório contém um monorepo com backend (API REST em Node/Express + Ty
 ## Como rodar (Docker Compose)
 
 1. Copie `.env.example` para `.env` e ajuste se necessário.
-2. Suba os serviços:
+2. Instale as dependências e gere os lockfiles necessários:
+   ```bash
+   npm install
+   npm --workspace apps/backend install
+   npm --workspace apps/frontend install
+   ```
+3. Suba os serviços:
    ```bash
    docker compose up --build
    ```
@@ -31,7 +37,7 @@ A API faz `prisma generate` e `prisma db push` automaticamente para subir o sche
 - Requisitos: Node 20+, npm 10+
 - Instalar dependências do monorepo:
   ```bash
-  npm ci
+  npm install
   ```
 - Backend:
   ```bash

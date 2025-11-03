@@ -1,6 +1,6 @@
-import type { Request, Response, NextFunction } from 'express';
-import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { env } from '../config/env.js';
+import { NextFunction, Request, Response } from 'express';
+import { jwtVerify, createRemoteJWKSet } from 'jose';
+import { env } from '../config/env';
 
 async function verifyToken(token: string) {
   if (!env.JWKS_URI || !env.JWT_ISSUER || !env.JWT_AUDIENCE) {

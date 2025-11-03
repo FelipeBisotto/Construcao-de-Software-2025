@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client';
-import { createUser, deleteUser, getUser, listUsers, updateUser } from './user.repository.js';
-import type { UserCreateInput, UserUpdateInput } from './user.schema.js';
+import { createUser, deleteUser, getUser, listUsers, updateUser } from './user.repository';
+import type { UserCreateInput, UserUpdateInput } from './user.schema';
 
 export const userService = {
   list: async (): Promise<User[]> => listUsers(),
