@@ -28,9 +28,9 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://postgres:postgres@db:5432/app?schema=public
       CORS_ORIGIN: http://localhost:5173
-      JWT_ISSUER: ""
-      JWT_AUDIENCE: ""
-      JWKS_URI: ""
+      JWT_ISSUER: ${JWT_ISSUER:-}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-}
+      JWKS_URI: ${JWKS_URI:-}
     depends_on:
       db:
         condition: service_healthy

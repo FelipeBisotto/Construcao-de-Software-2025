@@ -54,8 +54,7 @@ function authHeader() {
 function TokenTip() {
   return (
     <p style={{ fontSize: 12, opacity: 0.8 }}>
-      Dica: Para testar rotas protegidas, informe um token JWT em localStorage: <code>localStorage.setItem('token','SEU_TOKEN')</code>. Em dev sem IdP, middleware aceita vazio, mas RBAC exige claim de admin.
+      Dica: Gere um Access Token via Hosted UI do Cognito (veja README) e aplique em <code>localStorage.setItem('token','SEU_TOKEN')</code>. Somente tokens com a role <code>admin</code> conseguem criar/listar usuários.
     </p>
   );
 }
-

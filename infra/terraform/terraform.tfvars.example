@@ -1,0 +1,15 @@
+project_name   = "cs2025"
+environment    = "dev"
+backend_image  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cs2025-backend:latest"
+db_username    = "app_user"
+db_password    = "super-secret-password"
+db_name        = "app"
+container_env = {
+  CORS_ORIGIN = "https://frontend.example.com"
+}
+cognito_callback_urls = ["https://frontend.example.com/auth/callback"]
+cognito_logout_urls   = ["https://frontend.example.com"]
+cognito_admin_email   = "admin@example.com"
+cognito_admin_temp_password = "Admin123!"
+cognito_user_email          = "user@example.com"
+cognito_user_temp_password  = "User123!"
