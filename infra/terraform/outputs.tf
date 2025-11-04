@@ -19,7 +19,7 @@ output "frontend_bucket" {
 }
 
 output "frontend_website_url" {
-  description = "Endpoint público (S3 static site)"
+  description = "Public endpoint (S3 static site)"
   value       = module.frontend.website_endpoint
 }
 
