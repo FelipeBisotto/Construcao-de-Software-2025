@@ -10,7 +10,7 @@ Este repositório contém um monorepo com backend (API REST em Node/Express + Ty
 ## Requisitos por Release
 
 - Release 1.0: stack, estrutura inicial, Compose com Postgres, CRUD de User com testes, README e CI simples.
-- Release 2.0: `infra/terraform/` com esqueleto de IaC e CI validando formato/validate.
+- Release 2.0: `infra/terraform/` com VPC, ECS Fargate + ALB, RDS Postgres e bucket S3 versionados via Terraform; pipeline roda fmt/init/validate.
 - Release 3.0: Auth via IdP (Cognito/Auth0), validação de JWT via JWKS e RBAC; OpenAPI e testes.
 
 ## 🚀 Quick Start
@@ -66,7 +66,7 @@ docker compose down
 - 🔧 API Backend: `http://localhost:3000`
   - Health check: `http://localhost:3000/health`
   - Users API: `http://localhost:3000/api/users`
-  - Swagger: `http://localhost:3000/api-docs`
+  - Swagger: `http://localhost:3000/docs`
 - 🎨 Frontend: `http://localhost:5173`
 - 🗄️ PostgreSQL: `localhost:5432`
 
@@ -152,7 +152,7 @@ npm --workspace apps/frontend run test     # Roda testes
 ## Documentação
 
 - MVC: `docs/DESIGN_PATTERN_MVC.md`
-- Infra (Terraform): `infra/terraform/`
+- Infra (Terraform): `infra/terraform/` — descreve arquitetura AWS, variáveis e passos `init/plan/apply`.
 
 ---
 

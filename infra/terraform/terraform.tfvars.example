@@ -1,0 +1,12 @@
+project_name   = "cs2025"
+environment    = "dev"
+backend_image  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cs2025-backend:latest"
+db_username    = "app_user"
+db_password    = "super-secret-password"
+db_name        = "app"
+container_env = {
+  CORS_ORIGIN = "https://frontend.example.com"
+  JWT_ISSUER  = ""
+  JWT_AUDIENCE = ""
+  JWKS_URI    = ""
+}
