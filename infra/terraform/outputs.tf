@@ -1,5 +1,5 @@
 output "vpc_id" {
-  description = "ID da VPC provisionada"
+  description = "ID of the provisioned VPC"
   value       = module.network.vpc_id
 }
 
