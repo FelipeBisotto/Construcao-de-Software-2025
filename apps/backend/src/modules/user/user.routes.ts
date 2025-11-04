@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { userController } from './user.controller';
-import { requireAuth, requireRole } from '../../middlewares/auth';
+import { requireAuth, requireRole, requireSelfOrRole } from '../../middlewares/auth';
 
 const router = Router();
 
@@ -34,7 +34,7 @@ const router = Router();
  *         - $ref: '#/components/schemas/UserCreate'
  */
 
-// RBAC (habilita em T3): para desenvolvimento sem IdP, o middleware aceita token vazio
+// RBAC: admin pode listar/criar/deletar; owner ou admin podem ler/atualizar um user específico
 /**
  * @openapi
  * /api/users:
@@ -101,7 +101,7 @@ router.post('/', requireAuth, requireRole(['admin']), userController.create);
  *       404:
  *         description: Not found
  */
-router.get('/:id', requireAuth, userController.get);
+router.get('/:id', requireAuth, requireSelfOrRole(['admin']), userController.get);
 /**
  * @openapi
  * /api/users/{id}:
@@ -130,7 +130,7 @@ router.get('/:id', requireAuth, userController.get);
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.put('/:id', requireAuth, userController.update);
+router.put('/:id', requireAuth, requireSelfOrRole(['admin']), userController.update);
 /**
  * @openapi
  * /api/users/{id}:
@@ -159,7 +159,7 @@ router.put('/:id', requireAuth, userController.update);
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.patch('/:id', requireAuth, userController.update);
+router.patch('/:id', requireAuth, requireSelfOrRole(['admin']), userController.update);
 /**
  * @openapi
  * /api/users/{id}:
@@ -181,5 +181,3 @@ router.patch('/:id', requireAuth, userController.update);
 router.delete('/:id', requireAuth, requireRole(['admin']), userController.delete);
 
 export default router;
-
-

@@ -10,6 +10,7 @@ Release 2 introduz o provisionamento completo do ambiente AWS necessário para e
 | **ECS Fargate + ALB** | Um cluster ECS roda a API Node em tasks Fargate. O ALB público (porta 80) encaminha tráfego para o serviço privado. Logs vão para CloudWatch. |
 | **PostgreSQL RDS** | Instância Postgres 17 em subnets privadas, acessível apenas pelo serviço ECS. |
 | **S3 Static Website** | Bucket versionado para publicar o build do frontend (React). Endereço estático `http://<bucket>.s3-website-<region>.amazonaws.com`. |
+| **Cognito (IdP)** | User Pool + App Client com Hosted UI (Authorization Code + PKCE), grupos `admin` e `user` e usuários seed para testes. Outputs expõem JWKS/issuer para a API. |
 
 > **Observação**: variáveis como `backend_image`, `db_password` e secrets JWT devem ser injetadas via `terraform.tfvars` ou variáveis de ambiente antes do `apply`.
 
@@ -22,6 +23,7 @@ infra/terraform
 ├── outputs.tf             # Endpoints importantes
 ├── terraform.tfvars.example
 └── modules
+    ├── cognito/          # User Pool, App Client, usuários seed
     ├── database/          # RDS + SG
     ├── ecs/               # ALB + ECS + IAM
     ├── frontend/          # Bucket S3 estático
@@ -41,7 +43,7 @@ infra/terraform
    ```bash
    cd infra/terraform
    cp terraform.tfvars.example terraform.tfvars
-   # edite backend_image, db creds, JWT vars etc.
+   # edite backend_image, credenciais do DB e dados do Cognito/Hosted UI
    ```
 2. Inicialize e valide:
    ```bash
@@ -64,9 +66,12 @@ infra/terraform
 - `db_endpoint` – host do Postgres (porta 5432).
 - `frontend_website_url` – endpoint do bucket estático.
 - `ecs_cluster_name` – usado para observabilidade / deploys.
+- `cognito_user_pool_id` / `cognito_app_client_id` – valores para integração do backend/frontend.
+- `jwt_issuer` e `jwks_uri` – utilizados pelo middleware JWT.
+- `cognito_authorization_endpoint` / `cognito_token_endpoint` – URLs para gerar tokens via Hosted UI ou scripts.
 
 ## Boas práticas
 
 - Configure um backend remoto (S3 + DynamoDB) antes do primeiro `apply` para evitar perdas de state.
 - Use workspaces (`terraform workspace select dev`) para manter ambientes isolados (dev/stage/prod).
-- Credenciais sensíveis (`db_password`, `JWT_*`) devem vir de pipeline seguro/GitHub Actions Secrets.
+- Credenciais sensíveis (`db_password`, senhas temporárias Cognito etc.) devem vir de pipeline seguro/GitHub Actions Secrets.

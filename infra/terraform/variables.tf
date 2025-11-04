@@ -74,3 +74,40 @@ variable "container_env" {
   default     = {}
 }
 
+variable "cognito_callback_urls" {
+  description = "Callback URLs permitidos no Cognito Hosted UI"
+  type        = list(string)
+  default     = []
+}
+
+variable "cognito_logout_urls" {
+  description = "URLs de logout para Cognito"
+  type        = list(string)
+  default     = []
+}
+
+variable "cognito_admin_email" {
+  description = "Email do usuário administrador seed"
+  type        = string
+  default     = "admin@example.com"
+}
+
+variable "cognito_admin_temp_password" {
+  description = "Senha temporária do administrador (será exigida troca no primeiro login)"
+  type        = string
+  default     = "Admin123!"
+  sensitive   = true
+}
+
+variable "cognito_user_email" {
+  description = "Email do usuário padrão seed"
+  type        = string
+  default     = "user@example.com"
+}
+
+variable "cognito_user_temp_password" {
+  description = "Senha temporária do usuário padrão"
+  type        = string
+  default     = "User123!"
+  sensitive   = true
+}

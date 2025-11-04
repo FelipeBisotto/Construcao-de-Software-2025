@@ -5,15 +5,15 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 }
 
 provider "aws" {
   region = var.aws_region
-}
-
-locals {
-  name_prefix = "${var.project_name}-${var.environment}"
 }
 
 module "network" {
@@ -37,6 +37,18 @@ module "database" {
   db_password         = var.db_password
 }
 
+module "cognito" {
+  source                      = "./modules/cognito"
+  project_name                = var.project_name
+  environment                 = var.environment
+  callback_urls               = var.cognito_callback_urls
+  logout_urls                 = var.cognito_logout_urls
+  admin_user_email            = var.cognito_admin_email
+  admin_user_temp_password    = var.cognito_admin_temp_password
+  standard_user_email         = var.cognito_user_email
+  standard_user_temp_password = var.cognito_user_temp_password
+}
+
 locals {
   database_url = "postgresql://${var.db_username}:${var.db_password}@${module.database.db_endpoint}:5432/${var.db_name}?schema=public"
 }
@@ -55,6 +67,9 @@ module "ecs" {
     NODE_ENV     = "production"
     PORT         = tostring(var.container_port)
     DATABASE_URL = local.database_url
+    JWT_ISSUER   = module.cognito.issuer
+    JWT_AUDIENCE = module.cognito.app_client_id
+    JWKS_URI     = module.cognito.jwks_uri
   }, var.container_env)
 }
 
@@ -63,4 +78,3 @@ module "frontend" {
   project_name = var.project_name
   environment  = var.environment
 }
-

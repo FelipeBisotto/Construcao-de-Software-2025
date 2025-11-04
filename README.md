@@ -143,11 +143,50 @@ npm --workspace apps/frontend run test     # Roda testes
   ```
 - CI: `.github/workflows/ci.yml` faz build, lint, sobe Postgres em serviço, aplica schema Prisma e executa testes do backend; frontend faz build.
 
-## Auth (planejado para Release 3.0)
+## Auth (Release 3.0)
 
-- Middleware de JWT + JWKS (biblioteca `jose`) preparado e desligável em dev.
-- Variáveis: `JWT_ISSUER`, `JWT_AUDIENCE`, `JWKS_URI`.
-- RBAC por roles em claims do token.
+A API funciona como Resource Server validando JWT do Amazon Cognito. As rotas protegidas exigem tokens com issuer/audience corretos e roles presentes em `roles`, `cognito:groups` ou `scope`.
+
+- Variáveis obrigatórias: `JWT_ISSUER`, `JWT_AUDIENCE` (App Client ID) e `JWKS_URI` — todos obtidos pelos outputs do Terraform (`infra/terraform`).
+- Usuários seed criados via Terraform:
+  - `admin@example.com` (temp pass `Admin123!`) → grupo `admin`.
+  - `user@example.com` (temp pass `User123!`) → grupo `user`.
+  > O Cognito solicitará a troca da senha temporária no primeiro login via Hosted UI.
+
+### Gerando Access Token (Authorization Code + PKCE)
+
+1. Exporte os outputs necessários:
+   ```bash
+   cd infra/terraform
+   terraform output -raw cognito_authorization_endpoint
+   terraform output -raw cognito_token_endpoint
+   terraform output -raw cognito_app_client_id
+   ```
+2. Crie o code verifier/desafio (macOS/Linux):
+   ```bash
+   CODE_VERIFIER=$(openssl rand -base64 96 | tr -d '=+/' | cut -c1-64)
+   CODE_CHALLENGE=$(printf %s "$CODE_VERIFIER" | openssl dgst -binary -sha256 | openssl base64 | tr '+/' '-_' | tr -d '=')
+   REDIRECT_URI="http://localhost:5173/auth/callback"
+   AUTH_URL="$(terraform output -raw cognito_authorization_endpoint)?client_id=$(terraform output -raw cognito_app_client_id)&response_type=code&scope=openid+profile+email&redirect_uri=${REDIRECT_URI}&code_challenge_method=S256&code_challenge=${CODE_CHALLENGE}"
+   open "$AUTH_URL" # use xdg-open no Linux
+   ```
+3. Faça login com um dos usuários seed e copie o parâmetro `code` retornado no redirect.
+4. Troque o código pelo token:
+   ```bash
+   AUTH_CODE="<code-do-passo-anterior>"
+   TOKEN_ENDPOINT=$(terraform output -raw cognito_token_endpoint)
+   CLIENT_ID=$(terraform output -raw cognito_app_client_id)
+   curl -X POST "$TOKEN_ENDPOINT" \
+     -H 'Content-Type: application/x-www-form-urlencoded' \
+     -d "grant_type=authorization_code&client_id=$CLIENT_ID&code=$AUTH_CODE&code_verifier=$CODE_VERIFIER&redirect_uri=${REDIRECT_URI}"
+   ```
+   A resposta conterá `access_token`. Copie-o para testar a API (`Authorization: Bearer <token>` ou `localStorage.setItem('token','...')` no frontend).
+
+### RBAC das rotas `/api/users`
+
+- `GET /api/users`, `POST /api/users`, `DELETE /api/users/:id` → somente `admin`.
+- `GET /api/users/:id`, `PUT/PATCH /api/users/:id` → `admin` ou o próprio usuário (`sub` igual ao `id`).
+- Tokens com issuer/audience incorretos retornam `401`; roles insuficientes retornam `403`.
 
 ## Documentação
 
