@@ -48,7 +48,7 @@ resource "aws_subnet" "private" {
 resource "aws_eip" "nat" {
   for_each = aws_subnet.public
 
-  vpc = true
+  domain = "vpc"
   tags = merge(local.tags, {
     Name = "${var.project_name}-${var.environment}-nat-eip-${each.key}"
   })
