@@ -6,7 +6,7 @@ export function setupSwagger(app: Express) {
   const options = {
     definition: {
       openapi: '3.0.3',
-      info: { title: 'CS2025 API', version: '0.1.0' },
+      info: { title: 'Construção de Software', version: '0.1.0' },
       components: {
         securitySchemes: {
           bearerAuth: {

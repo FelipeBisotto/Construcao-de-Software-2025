@@ -6,12 +6,19 @@
     "apps/*"
   ],
   "scripts": {
+    "dev": "npm run dev:backend",
+    "dev:backend": "npm --workspace apps/backend run dev",
+    "dev:frontend": "npm --workspace apps/frontend run dev",
     "build": "npm run -ws build",
+    "build:backend": "npm --workspace apps/backend run build",
+    "build:frontend": "npm --workspace apps/frontend run build",
+    "start:backend": "npm --workspace apps/backend run start",
     "test": "npm run -ws test",
+    "test:backend": "npm --workspace apps/backend run test",
     "lint": "npm run -ws lint",
     "format": "npm run -ws format",
-    "dev:backend": "npm --workspace apps/backend run dev",
-    "dev:frontend": "npm --workspace apps/frontend run dev"
+    "prisma:generate": "npm --workspace apps/backend run prisma:generate",
+    "prisma:push": "npm --workspace apps/backend run prisma:push"
   },
   "engines": {
     "node": ">=20"

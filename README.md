@@ -13,43 +13,127 @@ Este repositório contém um monorepo com backend (API REST em Node/Express + Ty
 - Release 2.0: `infra/terraform/` com esqueleto de IaC e CI validando formato/validate.
 - Release 3.0: Auth via IdP (Cognito/Auth0), validação de JWT via JWKS e RBAC; OpenAPI e testes.
 
-## Como rodar (Docker Compose)
+## 🚀 Quick Start
 
-1. Copie `.env.example` para `.env` e ajuste se necessário.
-2. Instale as dependências e gere os lockfiles necessários:
-   ```bash
-   npm install
-   npm --workspace apps/backend install
-   npm --workspace apps/frontend install
-   ```
-3. Suba os serviços:
-   ```bash
-   docker compose up --build
-   ```
-3. Endpoints úteis:
-   - API: `http://localhost:3000/health`, `http://localhost:3000/api/users`
-   - Web (Vite dev): `http://localhost:5173`
+```bash
+# 1. Instalar dependências
+npm install
 
-A API faz `prisma generate` e `prisma db push` automaticamente para subir o schema.
+# 2. Opção A: Rodar com Docker (recomendado)
+docker compose up --build
 
-## Como rodar localmente (sem Docker)
+# 2. Opção B: Rodar localmente
+npm run dev:backend    # Terminal 1
+npm run dev:frontend   # Terminal 2
+```
 
-- Requisitos: Node 20+, npm 10+
-- Instalar dependências do monorepo:
-  ```bash
-  npm install
-  ```
-- Backend:
-  ```bash
-  cp .env.example .env  # edite DATABASE_URL
-  npm --workspace apps/backend run prisma:generate
-  npm --workspace apps/backend run prisma:push
-  npm run dev:backend
-  ```
-- Frontend:
-  ```bash
-  npm run dev:frontend
-  ```
+## 📋 Como rodar o projeto
+
+### Pré-requisitos
+
+- **Node.js 20+** e **npm 10+**
+- **Docker** e **Docker Compose** (para rodar com containers)
+- **PostgreSQL** (se rodar localmente sem Docker)
+
+### 📦 Instalação inicial
+
+```bash
+# Clone o repositório
+git clone <url-do-repo>
+cd T3
+
+# Instale as dependências do monorepo
+npm install
+```
+
+### 🐳 Opção 1: Rodar com Docker Compose (Recomendado)
+
+```bash
+# 1. Configure as variáveis de ambiente (opcional, já tem defaults)
+cp .env.example .env
+
+# 2. Suba todos os serviços (Postgres + Backend + Frontend)
+docker compose up --build
+
+# Para rodar em background
+docker compose up -d --build
+
+# Para parar os serviços
+docker compose down
+```
+
+**Endpoints disponíveis:**
+- 🔧 API Backend: `http://localhost:3000`
+  - Health check: `http://localhost:3000/health`
+  - Users API: `http://localhost:3000/api/users`
+  - Swagger: `http://localhost:3000/api-docs`
+- 🎨 Frontend: `http://localhost:5173`
+- 🗄️ PostgreSQL: `localhost:5432`
+
+### 💻 Opção 2: Rodar localmente (sem Docker)
+
+#### Backend
+
+```bash
+# 1. Configure o banco de dados
+cp .env.example .env
+# Edite o .env e configure DATABASE_URL para seu Postgres local
+
+# 2. Gere os tipos do Prisma e aplique o schema
+npm --workspace apps/backend run prisma:generate
+npm --workspace apps/backend run prisma:push
+
+# 3. Inicie o servidor de desenvolvimento
+npm run dev:backend
+```
+
+O backend estará disponível em `http://localhost:3000`
+
+#### Frontend
+
+```bash
+# Em outro terminal, inicie o frontend
+npm run dev:frontend
+```
+
+O frontend estará disponível em `http://localhost:5173`
+
+### 📝 Scripts disponíveis
+
+**No diretório raiz (atalhos):**
+```bash
+npm run dev              # Inicia backend em modo dev (atalho)
+npm run dev:backend      # Inicia backend em modo dev
+npm run dev:frontend     # Inicia frontend em modo dev
+npm run build            # Build de todos os workspaces
+npm run build:backend    # Build apenas do backend
+npm run build:frontend   # Build apenas do frontend
+npm run start:backend    # Inicia backend em produção (após build)
+npm run test             # Executa testes de todos os workspaces
+npm run test:backend     # Executa apenas testes do backend
+npm run lint             # Lint de todos os workspaces
+npm run format           # Formata código de todos os workspaces
+npm run prisma:generate  # Gera cliente Prisma
+npm run prisma:push      # Aplica schema Prisma no banco
+```
+
+**Backend específico:**
+```bash
+npm --workspace apps/backend run dev              # Dev mode
+npm --workspace apps/backend run build            # Build para produção
+npm --workspace apps/backend run start            # Inicia build de produção
+npm --workspace apps/backend run test             # Roda testes
+npm --workspace apps/backend run prisma:generate  # Gera cliente Prisma
+npm --workspace apps/backend run prisma:push      # Aplica schema no DB
+```
+
+**Frontend específico:**
+```bash
+npm --workspace apps/frontend run dev      # Dev mode com Vite
+npm --workspace apps/frontend run build    # Build para produção
+npm --workspace apps/frontend run preview  # Preview do build
+npm --workspace apps/frontend run test     # Roda testes
+```
 
 ## Testes e CI
 
