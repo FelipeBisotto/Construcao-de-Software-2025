@@ -16,7 +16,7 @@ export async function createUser(data: UserCreateInput): Promise<User> {
 
 export async function updateUser(id: string, data: UserUpdateInput): Promise<User> {
   // Ensure only defined fields are passed to Prisma
-  const updateData: any = {};
+  const updateData: Partial<UserUpdateInput> = {};
   if (data.name !== undefined) updateData.name = data.name;
   if (data.email !== undefined) updateData.email = data.email;
   if (data.role !== undefined) updateData.role = data.role;
