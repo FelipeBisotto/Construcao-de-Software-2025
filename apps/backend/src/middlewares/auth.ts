@@ -6,6 +6,7 @@ interface Payload {
   sub: string;
   scope: string;
   roles: string[];
+  'cognito:groups'?: string[];
 }
 
 interface AuthenticatedRequest extends Request {
@@ -41,7 +42,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 export function requireRole(roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = (req as AuthenticatedRequest).user;
-    const userRoles: string[] = (user?.roles as string[]) || (user?.['cognito:groups'] as string[]) || [];
+    const userRoles: string[] = user?.roles || user?.['cognito:groups'] || [];
     if (!userRoles || !roles.some((r) => userRoles.includes(r))) {
       return res.status(403).json({ error: 'Forbidden' });
     }
