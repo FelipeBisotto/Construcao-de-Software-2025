@@ -9,7 +9,7 @@ output "alb_dns" {
 }
 
 output "db_endpoint" {
-  description = "Endpoint do banco Postgres"
+  description = "Postgres database endpoint"
   value       = module.database.db_endpoint
 }
 
