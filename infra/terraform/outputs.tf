@@ -14,7 +14,7 @@ output "db_endpoint" {
 }
 
 output "frontend_bucket" {
-  description = "Bucket S3 para hospedar o frontend"
+  description = "S3 bucket for hosting the frontend"
   value       = module.frontend.bucket_name
 }
 
