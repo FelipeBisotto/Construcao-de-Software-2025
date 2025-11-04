@@ -11,24 +11,24 @@ const router = Router();
  *     User:
  *       type: object
  *       properties:
- *         id: { type: string }
- *         name: { type: string }
- *         email: { type: string, format: email }
+ *         id: { type: "string" }
+ *         name: { type: "string" }
+ *         email: { type: "string", format: "email" }
  *         role:
- *           type: string
- *           enum: [admin, user]
- *         createdAt: { type: string, format: date-time }
- *         updatedAt: { type: string, format: date-time }
+ *           type: "string"
+ *           enum: ["admin", "user"]
+ *         createdAt: { type: "string", format: "date-time" }
+ *         updatedAt: { type: "string", format: "date-time" }
  *     UserCreate:
  *       type: object
  *       required: [name, email]
  *       properties:
- *         name: { type: string }
- *         email: { type: string, format: email }
+ *         name: { type: "string" }
+ *         email: { type: "string", format: "email" }
  *         role:
- *           type: string
- *           enum: [admin, user]
- *           default: user
+ *           type: "string"
+ *           enum: ["admin", "user"]
+ *           default: "user"
  *     UserUpdate:
  *       allOf:
  *         - $ref: '#/components/schemas/UserCreate'
