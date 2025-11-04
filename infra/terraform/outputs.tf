@@ -4,7 +4,7 @@ output "vpc_id" {
 }
 
 output "alb_dns" {
-  description = "URL pública do load balancer da API"
+  description = "Public URL of the API load balancer"
   value       = module.ecs.alb_dns_name
 }
 
