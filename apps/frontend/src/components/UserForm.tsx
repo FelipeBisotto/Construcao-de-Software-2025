@@ -22,7 +22,7 @@ export default function UserForm({ onSubmit }: Props) {
     >
       <input placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} />
       <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <select value={role} onChange={(e) => setRole(e.target.value as any)}>
+      <select value={role} onChange={(e) => setRole(e.target.value as 'user' | 'admin')}>
         <option value="user">user</option>
         <option value="admin">admin</option>
       </select>

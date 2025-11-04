@@ -20,7 +20,7 @@ export function setupSwagger(app: Express) {
     apis: ['src/**/*.ts']
   };
 
-  const specs = swaggerJsdoc(options as any);
+  const specs = swaggerJsdoc(options as unknown);
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 }
 
