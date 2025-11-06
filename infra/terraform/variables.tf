@@ -74,6 +74,12 @@ variable "container_env" {
   default     = {}
 }
 
+variable "execution_role_name" {
+  description = "Existing IAM role to reuse as ECS execution role (e.g., LabRole)"
+  type        = string
+  default     = "LabRole"
+}
+
 variable "cognito_callback_urls" {
   description = "Callback URLs permitidos no Cognito Hosted UI"
   type        = list(string)
