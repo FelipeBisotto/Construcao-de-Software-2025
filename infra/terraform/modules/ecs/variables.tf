@@ -47,6 +47,12 @@ variable "container_env" {
   default = {}
 }
 
+variable "execution_role_name" {
+  type        = string
+  description = "Existing IAM role name to be used as ECS execution role (e.g., LabRole in AWS Academy)"
+  default     = "LabRole"
+}
+
 variable "health_check_path" {
   type    = string
   default = "/health"

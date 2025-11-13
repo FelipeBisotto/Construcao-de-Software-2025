@@ -7,13 +7,9 @@ type BuildOverrides = Partial<{ name: string; email: string; role: 'admin' | 'us
 function buildUserInput(overrides: BuildOverrides = {}) {
   const base = {
     name: overrides.name ?? `Test User ${randomUUID().slice(0, 8)}`,
-    email: overrides.email ?? `user-${randomUUID()}@example.com`
+    email: overrides.email ?? `user-${randomUUID()}@example.com`,
+    role: overrides.role ?? 'user'
   };
-
-  if (overrides.role) {
-    return { ...base, role: overrides.role };
-  }
-
   return base;
 }
 

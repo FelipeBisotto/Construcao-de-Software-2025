@@ -1,4 +1,11 @@
 terraform {
+  backend "s3" {
+    bucket         = "cs2025-terraform-state"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "cs2025-terraform-lock"
+  }
+
   required_version = ">= 1.5.0"
   required_providers {
     aws = {
@@ -54,15 +61,16 @@ locals {
 }
 
 module "ecs" {
-  source             = "./modules/ecs"
-  project_name       = var.project_name
-  environment        = var.environment
-  vpc_id             = module.network.vpc_id
-  public_subnet_ids  = module.network.public_subnet_ids
-  private_subnet_ids = module.network.private_subnet_ids
-  backend_image      = var.backend_image
-  container_port     = var.container_port
-  desired_count      = var.desired_count
+  source              = "./modules/ecs"
+  project_name        = var.project_name
+  environment         = var.environment
+  vpc_id              = module.network.vpc_id
+  public_subnet_ids   = module.network.public_subnet_ids
+  private_subnet_ids  = module.network.private_subnet_ids
+  backend_image       = var.backend_image
+  container_port      = var.container_port
+  desired_count       = var.desired_count
+  execution_role_name = var.execution_role_name
   container_env = merge({
     NODE_ENV     = "production"
     PORT         = tostring(var.container_port)

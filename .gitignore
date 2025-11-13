@@ -27,3 +27,9 @@ apps/frontend/dist/
 coverage/
 .tmp/
 .cache/
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+plan.tfplan
+*.tfvars

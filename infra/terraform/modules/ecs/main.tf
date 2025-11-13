@@ -102,45 +102,8 @@ resource "aws_ecs_cluster" "this" {
   tags = local.tags
 }
 
-data "aws_iam_policy_document" "task_execution" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:CreateLogGroup"
-    ]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_role" "task_execution" {
-  name               = "${var.project_name}-${var.environment}-task-exec"
-  assume_role_policy = data.aws_iam_policy_document.task_assume.json
-}
-
-data "aws_iam_policy_document" "task_assume" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole"
-    ]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role_policy" "task_execution" {
-  name   = "${var.project_name}-${var.environment}-task-exec-policy"
-  role   = aws_iam_role.task_execution.id
-  policy = data.aws_iam_policy_document.task_execution.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_exec" {
-  role       = aws_iam_role.task_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+data "aws_iam_role" "lab" {
+  name = var.execution_role_name
 }
 
 resource "aws_ecs_task_definition" "this" {
@@ -149,7 +112,7 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = tostring(var.cpu)
   memory                   = tostring(var.memory)
-  execution_role_arn       = aws_iam_role.task_execution.arn
+  execution_role_arn       = data.aws_iam_role.lab.arn
 
   container_definitions = jsonencode([
     {
